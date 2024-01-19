@@ -1,3 +1,3 @@
-# goit-js-hw-06
+# goit-js-hw-08
 
-This is my sixth JS homework.
+This is my 8 JS homework.
