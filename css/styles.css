@@ -2,11 +2,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
-  margin: 0;
+  margin: 0 156px;
   padding: 0;
   list-style: none;
-  padding: 100px 156px;
-  row-gap: 48px;
 }
 
 .gallery-item {

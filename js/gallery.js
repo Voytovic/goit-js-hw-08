@@ -1,5 +1,5 @@
 const images = [
- {
+  {
     preview:
       "https://cdn.pixabay.com/photo/2019/05/14/16/43/rchids-4202820__480.jpg",
     original:
@@ -63,7 +63,13 @@ const images = [
     description: "Lighthouse Coast Sea",
   },
 ];
+
 const galleryContainer = document.querySelector('.gallery');
+let currentInstance = null;
+
+galleryContainer.innerHTML = images.map(createGalleryItem).join('');
+
+galleryContainer.addEventListener('click', onGalleryItemClick);
 
 function createGalleryItem({ preview, original, description }) {
   return `
@@ -80,31 +86,36 @@ function createGalleryItem({ preview, original, description }) {
   `;
 }
 
-const galleryMarkup = images.map(createGalleryItem).join('');
-galleryContainer.innerHTML = galleryMarkup;
-
-galleryContainer.addEventListener('click', onGalleryItemClick);
-
 function onGalleryItemClick(event) {
   event.preventDefault();
 
   const isGalleryImage = event.target.classList.contains('gallery-image');
+  const clickOriginal = event.target.dataset.source;
 
-  if (isGalleryImage) {
-    const largeImageURL = event.target.dataset.source;
-    openModal(largeImageURL);
+  if (isGalleryImage && clickOriginal) {
+    if (currentInstance) {
+      currentInstance.close();
+    }
+
+    currentInstance = basicLightbox.create(
+      `<img src="${clickOriginal}" alt="${clickOriginal}"/>`,
+      {
+        onShow: () => {
+          window.addEventListener('keydown', onKeyDown);
+        },
+        onClose: () => {
+          window.removeEventListener('keydown', onKeyDown);
+          currentInstance = null; // Скидаємо посилання на поточний екземпляр
+        },
+      }
+    );
+
+    currentInstance.show();
   }
 }
 
-function openModal(url) {
-  const instance = basicLightbox.create(`<img src="${url}" alt=""/>`);
-  instance.show();
-  document.addEventListener('keydown', onModalClose);
-}
-
-function onModalClose(event) {
-  if (event.key === 'Escape') {
-    basicLightbox.close();
-    document.removeEventListener('keydown', onModalClose);
+function onKeyDown(event) {
+  if (event.key === 'Escape' && currentInstance) {
+    currentInstance.close();
   }
 }
