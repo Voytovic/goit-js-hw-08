@@ -8,8 +8,7 @@
 }
 
 .gallery-item {
-  width: 360px;
-  height: 300px;
+  height: auto;
   width: calc((100% - 2 * 24px) / 3);
 }
 
